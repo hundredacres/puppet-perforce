@@ -18,9 +18,9 @@ class perforce::server(
     system     => true,
   } ->
 
-  wget { 'p4d':
-    path   => '/usr/local/bin/p4d',
-    source => "http://www.perforce.com/downloads/perforce/r${version}/bin.linux26${::architecture}/p4d",
+  wget::fetch { 'p4d':
+    source      => 'http://cdist2.perforce.com/perforce/r14.1/bin.linux26x86_64/p4d',
+    destination => '/usr/bin',
   } ->
   file { '/usr/local/bin/p4d':
     mode => '0755',
