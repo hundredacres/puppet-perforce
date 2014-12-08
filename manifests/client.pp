@@ -1,3 +1,5 @@
+# == Class: perforce::client
+#
 class perforce::client() {
 
   wget::fetch { 'p4':

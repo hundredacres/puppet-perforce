@@ -1,30 +1,34 @@
-class perforce::server($user = 'perforce') {
+# == Class: perforce::server
+#
+class perforce::server(
+  $user = 'perforce',
+  $version = '14.1') {
 
   File {
     owner => $user,
     group => $user,
   }
 
-  Exec { path => "/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin" }
+  Exec { path => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin' }
 
   user { $user:
     ensure     => present,
-    home       => '/var/local/perforce',
+    home       => '/export/perforce',
     managehome => true,
     system     => true,
   } ->
 
-  wget::fetch { 'p4d':
-    source      => 'http://www.perforce.com/downloads/perforce/r12.1/bin.linux26x86_64/p4d',
-    destination => '/usr/bin',
+  wget { 'p4d':
+    path   => '/usr/local/bin/p4d',
+    source => "http://www.perforce.com/downloads/perforce/r${version}/bin.linux26${::architecture}/p4d",
   } ->
-  file { '/usr/bin/p4d':
+  file { '/usr/local/bin/p4d':
     mode => '0755',
   } ->
-  file { '/var/local/p4root':
+  file { '/export/perforce':
     ensure => directory,
   } ->
-  exec { 'p4d -r /var/local/p4root':
+  exec { 'p4d -r /export/perforce':
     unless => 'pidof p4d',
   }
 
